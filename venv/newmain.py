@@ -1,5 +1,6 @@
 from Vertex import Vertex
 
+print("Labyrinth wird eingelesen")
 text_file = open("blatt3_environment.txt", "r")
 lines = text_file.readlines()
 
@@ -20,6 +21,7 @@ for line in range(len(world)):
 
 
 frontier = [startVertex]
+alreadyVisited = []
 
 def goalFound(vertex):
     return world[vertex.y][vertex.x] == 'g'
@@ -31,7 +33,7 @@ def appendNeighbors(vertex):
                  Vertex(vertex.x, vertex.y - 1, vertex)]
 
     for neighbor in neighbors:
-        if world[neighbor.y][neighbor.x] != 'x' and Vertex.notIn(neighbor, frontier):
+        if world[neighbor.y][neighbor.x] != 'x' and Vertex.notIn(neighbor, frontier) and Vertex.notIn(neighbor, alreadyVisited):
             frontier.append(neighbor)
 
 def breadthFirstSearch():
@@ -48,6 +50,8 @@ def breadthFirstSearch():
 def depthFirstSearch():
     while frontier:
         vertex = frontier.pop(-1)
+        alreadyVisited.append(vertex)
+        #print("x: " + str(vertex.x) + " y: " + str(vertex.y))
         if goalFound(vertex):
             print("found")
             vertex.printPath()
@@ -55,7 +59,8 @@ def depthFirstSearch():
         else:
             appendNeighbors(vertex)
 
-
+print("Breitensuche beginnt")
 breadthFirstSearch()
 frontier = [startVertex]
+print("Tiefensuche beginnt")
 depthFirstSearch()
