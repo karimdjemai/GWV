@@ -1,0 +1,13 @@
+
+Aufgabe 3:
+
+Ein einfaches Beispiel das den Unterschied zwischen Tiefen- & Breitensuche 
+deutlich macht, wäre ein Maze, das pro Feld einen Branch-Faktor von 10 hat 
+anstelle von nur 4. Im Falle einer Breitensuche würde mit zunehmender 
+Suchtiefe die Anzahl der Knoten schnell steigen, wodurch sowohl der Zeit- 
+als auch der Speicherbedarf (weil exponentieller Anstieg) bei längeren 
+Suchen zum Problem wird. 
+
+Eine Tiefensuche kommt dagegen zwar potentiell mit wesentlich weniger 
+Speicherbedarf aus und findet das Ziel schneller, läuft aber Gefahr sich in 
+einem Zyklus unendlich lange zu verfangen und das Ziel nie zu finden. 
