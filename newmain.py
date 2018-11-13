@@ -109,7 +109,7 @@ def startup(sheet, search_type):
     world = define_world(sheet)
     start_vertex = find_start()
     append_neighbors(start_vertex)
-    already_visited = start_vertex
+    already_visited = [start_vertex]
     # portal_list = find_portals()
 
     if search_type is "dfs":
