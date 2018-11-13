@@ -5,6 +5,7 @@ h, w = len(lines), len(lines[0]) - 1
 
 world = [[7 for x in range(w)] for y in range(h)]
 
+#lisa ist doof
 for line in range(len(lines)):
   for char in range(len(lines[line])-1):
     world[line][char] = lines[line][char]
