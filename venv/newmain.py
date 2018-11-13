@@ -103,14 +103,19 @@ def display_world():
         print(line)
 
 
-def startup(sheet):
+def startup(sheet, search_type):
     global world, already_visited, portal_list, frontier
 
-    world.extend(define_world(sheet))
+    world = define_world(sheet)
     start_vertex = find_start()
     append_neighbors(start_vertex)
-    already_visited.append(start_vertex)
-    portal_list.append(find_portals())
+    already_visited = start_vertex
+    # portal_list = find_portals()
+
+    if search_type is "dfs":
+        depth_first_search()
+    elif search_type is "bfs":
+        breadth_first_search()
 
     return world
 
