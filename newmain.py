@@ -124,3 +124,15 @@ def startup(sheet, search_type):
 # frontier = [start_vertex]
 # print("Depth first search begins")
 # depth_first_search()
+
+
+# TODO **DONE** Git zum Laufen kriegen ==> Git ignore
+# TODO Wie Abgabe?  per zip? --> Warte auf Feedback von Twiefel
+# TODO Portale hinkriegen
+
+# TODO Aufgabe 1	Karim
+# TODO Aufgabe 2	Christian
+# TODO Aufgabe 3	Lisa
+# TODO Aufgabe 4	Mav
+# TODO Aufgabe 5	Josh
+# TODO Aufgabe 6	Karim
