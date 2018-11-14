@@ -1,5 +1,4 @@
 from Vertex import Vertex
-import re
 
 # every vertex in range
 frontier = []
@@ -38,6 +37,8 @@ def append_neighbors(vertex):
                  Vertex(vertex.x, vertex.y + 1, vertex),
                  Vertex(vertex.x, vertex.y - 1, vertex)]
     for neighbor in neighbors:
+        if not Vertex.not_in(neighbor,portal_list):  # Wenn der Vertex in der Portalliste ist
+            neighbor = Vertex.vertex_out_of_list(neighbor, portal_list).parent.set_parent(vertex)  # Setze den nachbarn auf den Ausgang des Portals
         if 'x' not in world[neighbor.y][neighbor.x] and Vertex.not_in(neighbor, frontier) and Vertex.not_in(neighbor, already_visited):
             frontier.append(neighbor)
 
@@ -52,32 +53,31 @@ def find_start():
 
 
 def find_portals():
-    global portal_list, world
+    global world
+    pl = []
     for pn in range(1, 6):  # search for portalnumber 1-5
-        portal = []  # List of both Vertices that together form a portal
+        vertex1 = None
+        vertex2 = None
         for li in range(len(world)):  # li = lineIndex
             if str(pn) in world[li]:
-                portal.append(Vertex(world[li].index(str(pn)), li, None))
-        if portal:
-            portal_list.append(portal)
+                if not vertex1:
+                    vertex1 = Vertex(world[li].index(str(pn)), li, None)
+                else:
+                    vertex2 = Vertex(world[li].index(str(pn)), li, None)
+        if vertex1:
+            pl.append(vertex1.set_parent(vertex2))
+            pl.append(vertex2.set_parent(vertex1))
+    return pl
                 
 
 def breadth_first_search():
     global frontier
     while frontier:
-        # print("x: " + str(frontier[0].x) + " y: " + str(frontier[0].y))
         vertex = frontier.pop(0)
         if goal_found(vertex):
             print("found")
             vertex.print_path()
             break
-        elif Vertex(vertex.x, vertex.y, None) in portal_list:
-            already_visited.append()
-            # TODO add the recognition of portals and add the corresponding portal (out)
-            # to the end of the frontier as well as its neighbours
-            # elif Vertex(vertex.x, vertex.y, none) in portal_list
-            #       add Vertex to frontier
-            #       set portal in as parent
         else:
             append_neighbors(vertex)
 
@@ -87,12 +87,10 @@ def depth_first_search():
     while frontier:
         vertex = frontier.pop(-1)
         already_visited.append(vertex)
-        # print("x: " + str(vertex.x) + " y: " + str(vertex.y))
         if goal_found(vertex):
             print("found")
             vertex.print_path()
             break
-        # same as above breadth_first_search but add the portal vertex at the beginning of the frontier
         else:
             append_neighbors(vertex)
 
@@ -108,8 +106,7 @@ def startup(sheet, search_type):
 
     world = define_world(sheet)
     start_vertex = find_start()
-    find_portals()
-    print("portals " + str(portal_list))
+    portal_list = find_portals()
     append_neighbors(start_vertex)
     already_visited = [start_vertex]
 
@@ -120,16 +117,10 @@ def startup(sheet, search_type):
 
     return world
 
-# print("Breadth first search begins")
-# breadth_first_search()
-# frontier = [start_vertex]
-# print("Depth first search begins")
-# depth_first_search()
-
 
 # TODO **DONE** Git zum Laufen kriegen ==> Git ignore
 # TODO Wie Abgabe?  per zip? --> Warte auf Feedback von Twiefel
-# TODO Portale hinkriegen
+# TODO **DONE** Portale hinkriegen
 
 # TODO Aufgabe 1	Karim
 # TODO Aufgabe 2	Christian
