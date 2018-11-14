@@ -8,6 +8,8 @@ already_visited = []
 portal_list = []
 # the labyrinth in machine readable format
 world = []
+# the goal vertex
+goal_vertex = None
 
 
 def define_world(sheet):
@@ -52,6 +54,15 @@ def find_start():
             return start_vertex
 
 
+# find g in the ascii chart to determine the start
+def find_goal():
+    global world
+    for line in range(len(world)):
+        if 'g' in world[line]:
+            goal_vertex = Vertex(world[line].index('g'), line, None)
+            return goal_vertex
+
+
 def find_portals():
     global world
     pl = []
@@ -68,6 +79,18 @@ def find_portals():
             pl.append(vertex1.set_parent(vertex2))
             pl.append(vertex2.set_parent(vertex1))
     return pl
+
+
+def heuristic_with_portals(start, goal):
+    distances = [start.dist_man(goal)]  # Generate list of distances, direct and through all of the portals
+    for portal_vertex in portal_list:
+        dist = start.dist_man(portal_vertex) + portal_vertex.parent.dist_man(goal)  # Distance from start to portal_entrance + distance from portal_exit to goal
+        distances.append(dist)
+    return min(distances)  # return the minimum
+
+
+def heuristic(start, goal):
+    return start.dist_man(goal)
                 
 
 def breadth_first_search():
@@ -102,10 +125,11 @@ def display_world():
 
 
 def startup(sheet, search_type):
-    global world, already_visited, portal_list, frontier
+    global world, already_visited, portal_list, frontier, goal_vertex
 
     world = define_world(sheet)
     start_vertex = find_start()
+    goal_vertex = find_goal()
     portal_list = find_portals()
     append_neighbors(start_vertex)
     already_visited = [start_vertex]

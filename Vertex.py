@@ -30,3 +30,7 @@ class Vertex:
 
     def set_parent(self, parent_vertex):
         return Vertex(self.x, self.y, parent_vertex)
+
+    # Returns the Manhattan distance from one vertex to another
+    def dist_man(self, other):
+        return abs(self.x - other.x) + abs(self.y - other.y)
