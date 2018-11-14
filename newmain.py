@@ -53,14 +53,14 @@ def find_start():
 
 def find_portals():
     global portal_list, world
-    iterator = 0
-    for line in world:
-        if '1' in line:
-            portal_list.append(Vertex(line.index('1'), iterator, None))
-        if '2' in line:
-            portal_list.append(Vertex(line.index('2'), iterator, None))
-        iterator += 1
-
+    for pn in range(1, 6):  # search for portalnumber 1-5
+        portal = []  # List of both Vertices that together form a portal
+        for li in range(len(world)):  # li = lineIndex
+            if str(pn) in world[li]:
+                portal.append(Vertex(world[li].index(str(pn)), li, None))
+        if portal:
+            portal_list.append(portal)
+                
 
 def breadth_first_search():
     global frontier
@@ -108,9 +108,10 @@ def startup(sheet, search_type):
 
     world = define_world(sheet)
     start_vertex = find_start()
+    find_portals()
+    print("portals " + str(portal_list))
     append_neighbors(start_vertex)
     already_visited = [start_vertex]
-    # portal_list = find_portals()
 
     if search_type is "dfs":
         depth_first_search()
