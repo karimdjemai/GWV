@@ -13,6 +13,12 @@ class Vertex:
                 return False
         return True
 
+    @staticmethod
+    def vertex_out_of_list(vertex, list):
+        for vertex_b in list:
+            if vertex.x == vertex_b.x and vertex.y == vertex_b.y:
+                return vertex_b
+
     def print_path(self):
         current_vertex = self
         path = ""
@@ -23,4 +29,8 @@ class Vertex:
         print("Path: " + path)
 
     def set_parent(self, parent_vertex):
-        self.parent = parent_vertex
+        return Vertex(self.x, self.y, parent_vertex)
+
+    # Returns the Manhattan distance from one vertex to another
+    def dist_man(self, other):
+        return abs(self.x - other.x) + abs(self.y - other.y)

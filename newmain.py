@@ -1,5 +1,4 @@
 from Vertex import Vertex
-import re
 
 # every vertex in range
 frontier = []
@@ -9,6 +8,8 @@ already_visited = []
 portal_list = []
 # the labyrinth in machine readable format
 world = []
+# the goal vertex
+goal_vertex = None
 
 
 def define_world(sheet):
@@ -38,6 +39,8 @@ def append_neighbors(vertex):
                  Vertex(vertex.x, vertex.y + 1, vertex),
                  Vertex(vertex.x, vertex.y - 1, vertex)]
     for neighbor in neighbors:
+        if not Vertex.not_in(neighbor,portal_list):  # Wenn der Vertex in der Portalliste ist
+            neighbor = Vertex.vertex_out_of_list(neighbor, portal_list).parent.set_parent(vertex)  # Setze den nachbarn auf den Ausgang des Portals
         if 'x' not in world[neighbor.y][neighbor.x] and Vertex.not_in(neighbor, frontier) and Vertex.not_in(neighbor, already_visited):
             frontier.append(neighbor)
 
@@ -51,33 +54,53 @@ def find_start():
             return start_vertex
 
 
-def find_portals():
-    global portal_list, world
-    iterator = 0
-    for line in world:
-        if '1' in line:
-            portal_list.append(Vertex(line.index('1'), iterator, None))
-        if '2' in line:
-            portal_list.append(Vertex(line.index('2'), iterator, None))
-        iterator += 1
+# find g in the ascii chart to determine the start
+def find_goal():
+    global world
+    for line in range(len(world)):
+        if 'g' in world[line]:
+            goal_vertex = Vertex(world[line].index('g'), line, None)
+            return goal_vertex
 
+
+def find_portals():
+    global world
+    pl = []
+    for pn in range(1, 6):  # search for portalnumber 1-5
+        vertex1 = None
+        vertex2 = None
+        for li in range(len(world)):  # li = lineIndex
+            if str(pn) in world[li]:
+                if not vertex1:
+                    vertex1 = Vertex(world[li].index(str(pn)), li, None)
+                else:
+                    vertex2 = Vertex(world[li].index(str(pn)), li, None)
+        if vertex1:
+            pl.append(vertex1.set_parent(vertex2))
+            pl.append(vertex2.set_parent(vertex1))
+    return pl
+
+
+def heuristic_with_portals(start, goal):
+    distances = [start.dist_man(goal)]  # Generate list of distances, direct and through all of the portals
+    for portal_vertex in portal_list:
+        dist = start.dist_man(portal_vertex) + portal_vertex.parent.dist_man(goal)  # Distance from start to portal_entrance + distance from portal_exit to goal
+        distances.append(dist)
+    return min(distances)  # return the minimum
+
+
+def heuristic(start, goal):
+    return start.dist_man(goal)
+                
 
 def breadth_first_search():
     global frontier
     while frontier:
-        # print("x: " + str(frontier[0].x) + " y: " + str(frontier[0].y))
         vertex = frontier.pop(0)
         if goal_found(vertex):
             print("found")
             vertex.print_path()
             break
-        elif Vertex(vertex.x, vertex.y, None) in portal_list:
-            already_visited.append()
-            # TODO add the recognition of portals and add the corresponding portal (out)
-            # to the end of the frontier as well as its neighbours
-            # elif Vertex(vertex.x, vertex.y, none) in portal_list
-            #       add Vertex to frontier
-            #       set portal in as parent
         else:
             append_neighbors(vertex)
 
@@ -87,12 +110,10 @@ def depth_first_search():
     while frontier:
         vertex = frontier.pop(-1)
         already_visited.append(vertex)
-        # print("x: " + str(vertex.x) + " y: " + str(vertex.y))
         if goal_found(vertex):
             print("found")
             vertex.print_path()
             break
-        # same as above breadth_first_search but add the portal vertex at the beginning of the frontier
         else:
             append_neighbors(vertex)
 
@@ -104,13 +125,14 @@ def display_world():
 
 
 def startup(sheet, search_type):
-    global world, already_visited, portal_list, frontier
+    global world, already_visited, portal_list, frontier, goal_vertex
 
     world = define_world(sheet)
     start_vertex = find_start()
+    goal_vertex = find_goal()
+    portal_list = find_portals()
     append_neighbors(start_vertex)
-    already_visited = start_vertex
-    # portal_list = find_portals()
+    already_visited = [start_vertex]
 
     if search_type is "dfs":
         depth_first_search()
@@ -119,8 +141,14 @@ def startup(sheet, search_type):
 
     return world
 
-# print("Breadth first search begins")
-# breadth_first_search()
-# frontier = [start_vertex]
-# print("Depth first search begins")
-# depth_first_search()
+
+# TODO **DONE** Git zum Laufen kriegen ==> Git ignore
+# TODO Wie Abgabe?  per zip? --> Warte auf Feedback von Twiefel
+# TODO **DONE** Portale hinkriegen
+
+# TODO Aufgabe 1	Karim
+# TODO Aufgabe 2	Christian
+# TODO Aufgabe 3	Lisa
+# TODO Aufgabe 4	Mav
+# TODO Aufgabe 5	Josh
+# TODO Aufgabe 6	Karim
