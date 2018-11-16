@@ -117,6 +117,35 @@ def depth_first_search():
         else:
             append_neighbors(vertex)
 
+def get_min_f(l):
+    f_values = []
+
+    for v in l:
+        f_value = v.f_value
+        f_values.append(f_value)
+
+    min_value = min(f_values)
+    index_min_value = f_values.index(min_value)
+
+    return l[index_min_value]
+
+
+def a_star_search():
+    global frontier, already_visited
+
+    while frontier:
+        vertex = get_min_f(frontier)
+        already_visited.append(vertex)
+
+        if goal_found(vertex):
+            print("found")
+            vertex.print_path()
+            break
+        else:
+            append_neighbors(vertex)
+
+
+
 
 def display_world():
     global world
@@ -138,6 +167,10 @@ def startup(sheet, search_type):
         depth_first_search()
     elif search_type is "bfs":
         breadth_first_search()
+    elif search_type is "a*":
+        a_star_search()
+    else:
+        return search_type + " not found"
 
     return world
 
