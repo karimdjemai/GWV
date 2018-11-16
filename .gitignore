@@ -133,4 +133,6 @@ dmypy.json
 pyvenv.cfg
 pip-selfcheck.json
 
+#von karim: .idea wird ignoriert.
+.idea
 # End of https://www.gitignore.io/api/python
