@@ -1,8 +1,9 @@
 class Vertex:
-    def __init__(self, x , y, parent):
+    def __init__(self, x , y, parent, f_value = 1):
         self.x = x
         self.y = y
         self.parent = parent
+        self.f_value = f_value
 
     @staticmethod
     def not_in(vertex_a, list):
