@@ -168,7 +168,7 @@ def startup(sheet, search_type):
         depth_first_search()
     elif search_type is "bfs":
         breadth_first_search()
-    elif search_type is "a*":
+    elif search_type is "a_star":
         a_star_search()
     else:
         return search_type + " not found"
