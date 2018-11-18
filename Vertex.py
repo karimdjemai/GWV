@@ -1,9 +1,10 @@
 class Vertex:
-    def __init__(self, x , y, parent, f_value = 1):
+    def __init__(self, x , y, parent):
         self.x = x
         self.y = y
         self.parent = parent
-        self.f_value = f_value
+        self.distance_from_start = 1
+        self.value = 1
 
     @staticmethod
     def not_in(vertex_a, list):
