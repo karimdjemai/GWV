@@ -90,8 +90,8 @@ def heuristic_with_portals(start, goal):
     return min(distances)  # return the minimum
 
 
-def heuristic(start, goal):
-    return start.dist_man(goal)
+def heuristic(vertex):
+    return vertex.dist_man(goal_vertex)
                 
 
 def breadth_first_search():
@@ -118,15 +118,15 @@ def depth_first_search():
         else:
             append_neighbors(vertex)
 
-def get_min_f(l):
-    f_values = []
+def get_min_value(l):
+    values = []
 
     for v in l:
-        f_value = v.f_value
-        f_values.append(f_value)
+        value = v.value
+        values.append(value)
 
-    min_value = min(f_values)
-    index_min_value = f_values.index(min_value)
+    min_value = min(values)
+    index_min_value = values.index(min_value)
 
     return l[index_min_value]
 
@@ -135,8 +135,10 @@ def a_star_search():
     global frontier, already_visited
 
     while frontier:
-        vertex = get_min_f(frontier)
+        vertex = get_min_value(frontier)
         already_visited.append(vertex)
+        vertex.distance_from_start += 1
+        vertex.value = vertex.distance_from_start + heuristic(vertex)
 
         if goal_found(vertex):
             print("found")
