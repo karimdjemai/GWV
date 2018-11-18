@@ -28,8 +28,7 @@ def define_world(sheet):
 
 
 def goal_found(vertex):
-    global world
-    return world[vertex.y][vertex.x] == 'g'
+    return goal_vertex.x == vertex.x and goal_vertex.y == vertex.y
 
 
 def append_neighbors(vertex):
