@@ -37,6 +37,7 @@ def append_neighbors(vertex):
                  Vertex(vertex.x + 1, vertex.y, vertex),
                  Vertex(vertex.x, vertex.y + 1, vertex),
                  Vertex(vertex.x, vertex.y - 1, vertex)]
+
     for neighbor in neighbors:
         if not Vertex.not_in(neighbor,portal_list):  # Wenn der Vertex in der Portalliste ist
             neighbor = Vertex.vertex_out_of_list(neighbor, portal_list).parent.set_parent(vertex)  # Setze den nachbarn auf den Ausgang des Portals
@@ -58,6 +59,7 @@ def find_goal():
     global world
     for line in range(len(world)):
         if 'g' in world[line]:
+            global goal_vertex
             goal_vertex = Vertex(world[line].index('g'), line, None)
             return goal_vertex
 
