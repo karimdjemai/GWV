@@ -84,10 +84,11 @@ def find_portals():
     return pl
 
 
-def heuristic_with_portals(start, goal):
-    distances = [start.dist_man(goal)]  # Generate list of distances, direct and through all of the portals
+def heuristic_with_portals(start):
+    global goal_vertex
+    distances = [start.dist_man(goal_vertex)]  # Generate list of distances, direct and through all of the portals
     for portal_vertex in portal_list:
-        dist = start.dist_man(portal_vertex) + portal_vertex.parent.dist_man(goal)  # Distance from start to portal_entrance + distance from portal_exit to goal
+        dist = start.dist_man(portal_vertex) + portal_vertex.parent.dist_man(goal_vertex)  # Distance from start to portal_entrance + distance from portal_exit to goal
         distances.append(dist)
     return min(distances)  # return the minimum
 
@@ -98,28 +99,28 @@ def heuristic(vertex):
 
 def breadth_first_search():
     global frontier
-    start = timeit.timeit()
-    iterations = 0
+    b_start = timeit.timeit()
+    b_iterations = 0
 
     while frontier:
         vertex = frontier.pop(0)
         if goal_found(vertex):
             print("Found!")
             vertex.print_path()
-            end = timeit.timeit()
-            print(str(end - start) + " seconds")
-            print(str(iterations) + " iterations needed")
+            b_end = timeit.timeit()
+            print(str(b_end - b_start) + " seconds")
+            print(str(b_iterations) + " iterations needed")
             print(str(getsizeof(already_visited)) + " bytes")
             break
         else:
             append_neighbors(vertex)
-            iterations += 1
+            b_iterations += 1
 
 
 def depth_first_search():
     global frontier, already_visited
-    start = timeit.timeit()
-    iterations = 0
+    d_start = timeit.timeit()
+    d_iterations = 0
 
     while frontier:
         vertex = frontier.pop(-1)
@@ -127,14 +128,14 @@ def depth_first_search():
         if goal_found(vertex):
             print("Found!")
             vertex.print_path()
-            end = timeit.timeit()
-            print(str(end - start) + " seconds")
-            print(str(iterations) + " iterations needed")
+            d_end = timeit.timeit()
+            print(str(d_end - d_start) + " seconds")
+            print(str(d_iterations) + " iterations needed")
             print(str(getsizeof(already_visited)) + " bytes")
             break
         else:
             append_neighbors(vertex)
-            iterations += 1
+            d_iterations += 1
 
 
 def get_min_value(l):
@@ -152,37 +153,41 @@ def get_min_value(l):
 
 def a_star_search():
     global frontier, already_visited
-    start = timeit.timeit()
-    iterations = 0
+    a_start = timeit.timeit()
+    a_iterations = 0
 
     while frontier:
         vertex = get_min_value(frontier)
         already_visited.append(vertex)
         vertex.distance_from_start += 1
-        vertex.value = vertex.distance_from_start + heuristic(vertex)
+        vertex.value = vertex.distance_from_start + heuristic_with_portals(vertex)
 
         if goal_found(vertex):
             print("Found!")
             vertex.print_path()
-            end = timeit.timeit()
-            print(str(end - start) + " seconds")
-            print(str(iterations) + " iterations needed")
+            a_end = timeit.timeit()
+            print(str(a_end - a_start) + " seconds")
+            print(str(a_iterations) + " iterations needed")
             print(str(getsizeof(already_visited)) + " bytes")
             break
         else:
             append_neighbors(vertex)
-            iterations += 1
+            a_iterations += 1
 
 
-def display_world():
+def display_world(path):
     global world
     for line in world:
-        print(line)
+        for vertex in path:
+            if vertex[0][0] in world:
+                print(vertex)
+            else:
+                print(line)
 
 
 def startup(sheet, search_type):
     global world, already_visited, portal_list, frontier, goal_vertex
-    start = timeit.timeit()
+    s_start = timeit.timeit()
 
     world = define_world(sheet)
     start_vertex = find_start()
@@ -191,8 +196,8 @@ def startup(sheet, search_type):
     append_neighbors(start_vertex)
     already_visited = [start_vertex]
 
-    end = timeit.timeit()
-    print("Startup needed: " + str(end - start) + " seconds \n")
+    s_end = timeit.timeit()
+    print("Startup needed: " + str(s_end - s_start) + " seconds \n")
 
     if search_type is "dfs":
         depth_first_search()
@@ -206,13 +211,9 @@ def startup(sheet, search_type):
     return world
 
 
-# TODO **DONE** Git zum Laufen kriegen ==> Git ignore
-# TODO Wie Abgabe?  per zip? --> Warte auf Feedback von Twiefel
-# TODO **DONE** Portale hinkriegen
-
-# TODO Aufgabe 1	Karim
-# TODO Aufgabe 2	Christian
-# TODO Aufgabe 3	Lisa
-# TODO Aufgabe 4	Marv
-# TODO Aufgabe 5	Josh
-# TODO Aufgabe 6	Karim
+print("\n A Stern")
+startup("blatt4_environment_b.txt", "a_star")
+print("\n Breitensuche")
+startup("blatt4_environment_b.txt", "bfs")
+print("\n Teiefensuche")
+startup("blatt4_environment_b.txt", "dfs")

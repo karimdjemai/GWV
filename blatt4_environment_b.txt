@@ -1,6 +1,6 @@
 xxxxxxxxxxxxxxxxxxxx
 x2                 x
-x       xxx        x
+x       xxx    g   x
 x   1   x xxxxx    x
 x   s              x
 x       x x  xxxxxxx

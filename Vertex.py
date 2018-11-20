@@ -30,6 +30,16 @@ class Vertex:
             current_vertex = current_vertex.parent
         print("Path: " + path)
 
+    def return_path(self):
+        current_vertex = self
+        path = ""
+
+        while current_vertex:
+            path = "[x: " + str(current_vertex.x) + ", y: " + str(current_vertex.y) + "] " + path
+            current_vertex = current_vertex.parent
+
+        return path
+
     def set_parent(self, parent_vertex):
         return Vertex(self.x, self.y, parent_vertex)
 
